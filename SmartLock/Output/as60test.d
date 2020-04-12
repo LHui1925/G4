@@ -2,7 +2,7 @@
 ..\..\output\as60test.o: ..\..\User\Bsp\AS60\as60test.h
 ..\..\output\as60test.o: ..\..\Libraries\CMSIS\stm32f10x.h
 ..\..\output\as60test.o: ..\..\Libraries\CMSIS\core_cm3.h
-..\..\output\as60test.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\as60test.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\..\output\as60test.o: ..\..\Libraries\CMSIS\system_stm32f10x.h
 ..\..\output\as60test.o: ..\..\User\stm32f10x_conf.h
 ..\..\output\as60test.o: ..\..\Libraries\FWlib\inc\stm32f10x_adc.h
@@ -30,7 +30,7 @@
 ..\..\output\as60test.o: ..\..\Libraries\FWlib\inc\stm32f10x_wwdg.h
 ..\..\output\as60test.o: ..\..\Libraries\FWlib\inc\misc.h
 ..\..\output\as60test.o: ..\..\User\Bsp\HARDWARE\AS608\as608.h
-..\..\output\as60test.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\as60test.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\..\output\as60test.o: ..\..\User\board.h
 ..\..\output\as60test.o: ..\..\User\Bsp\led\bsp_led.h
 ..\..\output\as60test.o: ..\..\User\Bsp\uart\bsp_usart.h
@@ -39,16 +39,16 @@
 ..\..\output\as60test.o: ..\..\User\rtconfig.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\rtdebug.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\rtdef.h
-..\..\output\as60test.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\stdarg.h
+..\..\output\as60test.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\rtlibc.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\libc/libc_stat.h
-..\..\output\as60test.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\time.h
+..\..\output\as60test.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\libc/libc_errno.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\libc/libc_fcntl.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\libc/libc_ioctl.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\libc/libc_dirent.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\libc/libc_signal.h
-..\..\output\as60test.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\signal.h
+..\..\output\as60test.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\signal.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\libc/libc_fdset.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\rtservice.h
 ..\..\output\as60test.o: ..\..\rtthread\3.0.3\include\rtm.h

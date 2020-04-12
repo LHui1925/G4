@@ -76,6 +76,7 @@
 "..\..\output\myaes.o"
 "..\..\output\base64.o"
 "..\..\output\crc.o"
+"..\..\output\newweb.o"
 --library_type=microlib --strict --scatter "..\..\Output\Fire_RT-Thread.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

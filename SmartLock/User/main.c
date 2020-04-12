@@ -38,6 +38,7 @@
 #include "web.h"
 #include "handle.h"
 #include "G4.h"
+#include "newweb.h"
 
 /*
 *************************************************************************
@@ -81,6 +82,9 @@ extern rt_sem_t unlock_sem;//解锁信号量
 
 /*消息邮箱控制块*/
 extern rt_mailbox_t G4_mail;
+
+
+
 /*
 *************************************************************************
 *                             函数声明
@@ -171,6 +175,47 @@ int main(void)
 	 }
     else
      rt_kprintf("\r\n webMsgHand_thread 线程创建失败\r\n");
+		
+		
+		//-----------------------------------------------------------
+		
+		webmsg_sendmq = rt_mq_create("wmsgsend",/* 消息队列名字 */
+                     2,     /* 消息的最大长度 */
+                     10,    /* 消息队列的最大容量 */
+                     RT_IPC_FLAG_FIFO);/* 队列模式 FIFO(0x00)*/
+  
+		webmsg_recemb = rt_mb_create("wmsgrec",
+													5, 
+													RT_IPC_FLAG_FIFO);
+		
+		webmsgsend_th =                          /* 线程控制块指针 */
+    rt_thread_create( "wmsgst",              /* 线程名字 */
+                      newwebconnect_entry,   /* 线程入口函数 */
+                      RT_NULL,             /* 线程入口函数参数 */
+                      3072,                 /* 线程栈大小 */
+                      3,                   /* 线程的优先级 */
+                      20);                 /* 线程时间片 */
+                   
+    /* 启动线程，开启调度 */
+   if (webmsgsend_th != RT_NULL)
+	 {
+     rt_thread_startup(webmsgsend_th);
+	 }
+	 
+	 
+	 webmsgrece_th =                          /* 线程控制块指针 */
+    rt_thread_create( "wmsgrt",              /* 线程名字 */
+                      newwebhandle_entry,   /* 线程入口函数 */
+                      RT_NULL,             /* 线程入口函数参数 */
+                      3072,                 /* 线程栈大小 */
+                      3,                   /* 线程的优先级 */
+                      20);                 /* 线程时间片 */
+                   
+    /* 启动线程，开启调度 */
+   if (webmsgrece_th != RT_NULL)
+	 {
+     rt_thread_startup(webmsgrece_th);
+	 }
 		
 	}
 /*

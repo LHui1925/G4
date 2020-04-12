@@ -6,7 +6,7 @@
 #define BASE64_H
 
 //#include <stdint-gcc.h>
-#include "sys.h"
+#include "stm32f10x.h"
 
 /**
  * base64加密字符串，加密后得到字符串，后面会追加一个字符串的结束符\0

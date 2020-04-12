@@ -5,9 +5,10 @@
 #include "board.h"
 #include "rtthread.h"
 #include "delay.h"
-
+#include "newweb.h"
 
 rt_mailbox_t G4_mail = RT_NULL;
+
 
 
 struct G4_UART_BUFF G4_GET[3];//存放接收的数据
@@ -541,5 +542,37 @@ void G4_USART_IRQHandler()
 			G4_GET_POINT=(G4_GET_POINT+1)%3;
 		}
 		FirstGet=0;
+	}
+}
+
+
+void xs()
+{
+	uint8_t chTemp;
+	static int16_t getnum=0;
+	if ( USART_GetITStatus ( G4_USARTx, USART_IT_RXNE ) != RESET )
+	{
+		chTemp=USART_ReceiveData( G4_USARTx ); 
+		//接收到第一个数据字节时，选择接收数据的缓冲区，有3个，每次换一个，防止数据没有被处理就被清掉了
+		if(getnum == 0)
+		{
+			G4_GET_POINT=(G4_GET_POINT+1)%3;
+		}
+		if(getnum < 1499)//防止接收的数据超过缓冲区的大小，一般不可能发生
+		{
+			G4_GET[G4_GET_POINT].data[getnum] = chTemp;
+			getnum++;
+		}
+	}else if ( USART_GetITStatus( G4_USARTx, USART_IT_IDLE ) == SET )
+	{
+		chTemp=USART_ReceiveData( G4_USARTx ); 
+		if(getnum < 1499)
+		{
+			G4_GET[G4_GET_POINT].data[getnum] = chTemp;
+			getnum++;
+		}
+		G4_GET[G4_GET_POINT].num = getnum;
+		getnum = 0;
+		rt_mb_send(webmsg_recemb,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
 	}
 }

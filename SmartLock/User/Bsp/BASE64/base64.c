@@ -4,6 +4,7 @@
 
 
 #include "stm32f10x.h"
+#include "base64.h"
 
 const char Base64_Table[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+//";
 
