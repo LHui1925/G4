@@ -13,6 +13,7 @@
 
 extern rt_mq_t webmsg_sendmq;//发送内容的消息队列
 extern rt_mailbox_t webmsg_recemb;//接收内容的邮箱
+
 extern rt_thread_t webmsgsend_th;   //网络连接和发送消息线程
 extern rt_thread_t webmsgrece_th;   //网络消息接收和处理线程
 

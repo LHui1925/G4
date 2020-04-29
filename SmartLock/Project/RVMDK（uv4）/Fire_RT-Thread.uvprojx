@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32F103VE</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F1xx_DFP.2.1.0</PackID>
+          <PackID>Keil.STM32F1xx_DFP.1.0.5</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x10000) IROM(0x08000000,0x80000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -184,7 +184,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -338,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD, USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\rtthread\3.0.3\components\finsh;..\..\rtthread\3.0.3\include;..\..\rtthread\3.0.3\include\libc;..\..\User\Bsp\led;..\..\User\Bsp\key;..\..\User\Bsp\uart;..\..\User\Bsp\HARDWARE\AS608;..\..\User\Bsp\HARDWARE\BEEP;..\..\User\Bsp\HARDWARE\TIMER;..\..\User\Bsp\HARDWARE\USART2;..\..\User\Bsp\HARDWARE\sys;..\..\User\Bsp\HARDWARE\delay;..\..\User\Bsp\Keyboard;..\..\User\Bsp\Handle_AS608;..\..\User\Bsp\Handle_code;..\..\User\Bsp\flash;..\..\User\Bsp\FATFS\option;..\..\User\Bsp\FATFS;..\..\User\Bsp\Handle_flash;..\..\User\Bsp\G4;..\..\User\Bsp\CRC;..\..\User\Bsp\web;..\..\User\Bsp\cJSON;..\..\User\Bsp\BASE64;..\..\User\Bsp\handle;..\..\User\Bsp\SM4;..\..\User\Bsp\HASH;..\..\User\Bsp\lock;..\..\User\Bsp\AS60;..\..\User\Bsp\PLAY;..\..\User\Bsp\CRC;..\..\User\Bsp\STM32_Cryptographic_Library\inc;..\..\User\Bsp\AES</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS;..\..\User;..\..\Libraries\FWlib\inc;..\..\rtthread\3.0.3\components\finsh;..\..\rtthread\3.0.3\include;..\..\rtthread\3.0.3\include\libc;..\..\User\Bsp\led;..\..\User\Bsp\key;..\..\User\Bsp\uart;..\..\User\Bsp\HARDWARE\AS608;..\..\User\Bsp\HARDWARE\BEEP;..\..\User\Bsp\HARDWARE\TIMER;..\..\User\Bsp\HARDWARE\USART2;..\..\User\Bsp\HARDWARE\sys;..\..\User\Bsp\HARDWARE\delay;..\..\User\Bsp\Keyboard;..\..\User\Bsp\Handle_AS608;..\..\User\Bsp\Handle_code;..\..\User\Bsp\flash;..\..\User\Bsp\FATFS\option;..\..\User\Bsp\FATFS;..\..\User\Bsp\Handle_flash;..\..\User\Bsp\G4;..\..\User\Bsp\CRC;..\..\User\Bsp\web;..\..\User\Bsp\cJSON;..\..\User\Bsp\BASE64;..\..\User\Bsp\CRC;..\..\User\Bsp\AES;..\..\User\Bsp\Open</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -613,11 +612,6 @@
               <FilePath>..\..\User\Bsp\HARDWARE\sys\sys.c</FilePath>
             </File>
             <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\HARDWARE\delay\delay.c</FilePath>
-            </File>
-            <File>
               <FileName>Key.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Bsp\Keyboard\Key.c</FilePath>
@@ -641,6 +635,11 @@
               <FileName>Handle_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Bsp\Handle_flash\Handle_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>open.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\Bsp\Open\open.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -778,49 +777,9 @@
               <FilePath>..\..\User\Bsp\G4\G4.c</FilePath>
             </File>
             <File>
-              <FileName>web.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\web\web.c</FilePath>
-            </File>
-            <File>
-              <FileName>handle.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\handle\handle.c</FilePath>
-            </File>
-            <File>
-              <FileName>SM4.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\SM4\SM4.c</FilePath>
-            </File>
-            <File>
               <FileName>cJSON.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\User\Bsp\cJSON\cJSON.c</FilePath>
-            </File>
-            <File>
-              <FileName>MD5.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\HASH\MD5.c</FilePath>
-            </File>
-            <File>
-              <FileName>as60test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\AS60\as60test.c</FilePath>
-            </File>
-            <File>
-              <FileName>lock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\lock\lock.c</FilePath>
-            </File>
-            <File>
-              <FileName>as60.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\AS60\as60.c</FilePath>
-            </File>
-            <File>
-              <FileName>play.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\User\Bsp\PLAY\play.c</FilePath>
             </File>
             <File>
               <FileName>AES.c</FileName>

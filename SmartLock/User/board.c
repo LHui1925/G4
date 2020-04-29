@@ -4,14 +4,14 @@
 #include "board.h"
 #include "rtthread.h"
 #include "bsp_usart.h"
-#include "sys.h"
-#include "delay.h"	  
+#include "sys.h"  
 //#include "usmart.h"     
 #include "AS608.h"
 #include "timer.h"
 #include "Handle_as608.h"
 #include "usart2.h"
 #include "G4.h"
+#include "Handle_flash.h"
 
 /* RT-Thread相关头文件 */
 #include <rthw.h>
@@ -19,7 +19,7 @@
 
 
 #if defined(RT_USING_USER_MAIN) && defined(RT_USING_HEAP)
-#define RT_HEAP_SIZE 1024
+#define RT_HEAP_SIZE 1024*10
 /* 从内部SRAM里面分配一部分静态内存来作为rtt的堆空间，这里配置为4KB */
 static uint32_t rt_heap[RT_HEAP_SIZE];
 RT_WEAK void *rt_heap_begin_get(void)
@@ -70,11 +70,13 @@ void rt_hw_board_init()
 	
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
 	
-	delay_init();  	//初始化延时函数
+//	delay_init();  	//初始化延时函数
 	
 	usart2_init(usart2_baund);//初始化串口2,用于与指纹模块通讯
 	
 	PS_StaGPIO_Init();	//初始化FR读状态引脚	
+	
+
 
 	
 /* 调用组件初始化函数 (use INIT_BOARD_EXPORT()) */

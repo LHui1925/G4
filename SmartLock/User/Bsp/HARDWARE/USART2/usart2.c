@@ -1,4 +1,3 @@
-#include "delay.h"
 #include "usart2.h"
 #include "stdarg.h"	 	 
 #include "stdio.h"	 	 

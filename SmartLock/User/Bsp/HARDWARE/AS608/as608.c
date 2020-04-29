@@ -10,8 +10,7 @@
 //Copyright(C) 广州市星翼电子科技有限公司 2014-2024
 //All rights dataerved									  
 ////////////////////////////////////////////////////////////////////////////////// 	
-#include <string.h>
-#include "delay.h" 	
+#include <string.h>	
 #include "usart2.h"
 #include "as608.h"
 #include "rtthread.h"
@@ -85,7 +84,7 @@ static u8 *JudgeStr(u16 waittime)
 	USART2_RX_STA=0;
 	while(--waittime)
 	{
-		delay_ms(1);
+		rt_thread_delay(1);
 		if(USART2_RX_STA&0X8000)//接收到一次数据
 		{
 			USART2_RX_STA=0;
@@ -541,7 +540,7 @@ u8 PS_HandShake(u32 *PS_Addr)
 	MYUSART_SendData(0X01);
 	MYUSART_SendData(0X00);
 	MYUSART_SendData(0X00);	
-	delay_ms(200);
+	rt_thread_delay(200);
 	if(USART2_RX_STA&0X8000)//接收到数据
 	{		
 		if(//判断是不是模块返回的应答包				

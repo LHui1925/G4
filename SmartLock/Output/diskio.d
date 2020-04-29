@@ -4,7 +4,7 @@
 ..\..\output\diskio.o: ..\..\User\Bsp\flash\bsp_spi_flash.h
 ..\..\output\diskio.o: ..\..\Libraries\CMSIS\stm32f10x.h
 ..\..\output\diskio.o: ..\..\Libraries\CMSIS\core_cm3.h
-..\..\output\diskio.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\diskio.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\stdint.h
 ..\..\output\diskio.o: ..\..\Libraries\CMSIS\system_stm32f10x.h
 ..\..\output\diskio.o: ..\..\User\stm32f10x_conf.h
 ..\..\output\diskio.o: ..\..\Libraries\FWlib\inc\stm32f10x_adc.h
@@ -31,4 +31,4 @@
 ..\..\output\diskio.o: ..\..\Libraries\FWlib\inc\stm32f10x_usart.h
 ..\..\output\diskio.o: ..\..\Libraries\FWlib\inc\stm32f10x_wwdg.h
 ..\..\output\diskio.o: ..\..\Libraries\FWlib\inc\misc.h
-..\..\output\diskio.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+..\..\output\diskio.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\stdio.h

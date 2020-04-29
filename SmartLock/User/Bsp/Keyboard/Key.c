@@ -1,9 +1,8 @@
 #include "key.h"
 #include "rtthread.h"
-#include "delay.h"
 
 /**
-** PB7、PB9-PB11,列，输出。 PB12-PB15,行，输入
+** PC8-PC11,列，输出。 PC4-PC7,行，输入
 **/
 void Key_Config(void)
 {
@@ -31,7 +30,9 @@ int KeyScan(void)
 		  return -1;
 	 else
 	 {	
-	    delay_ms(20);    //延时5ms去抖动
+//	    delay_ms(20);    //延时5ms去抖动
+		 rt_thread_delay(3);
+		
 	    if((GPIOC->IDR & 0x00f0)==0x0000)
 	    return -1;
 	 }
@@ -79,10 +80,10 @@ int KeyScan(void)
 }
 
 /************************************
-按键表盘为：		1 2 3  11（录指纹）
-                4 5 6  12（删指纹）
-                7 8 9  13（return）
-               OK 0 CL 14
+按键表盘为：		1 2 3  S1（11录指纹）
+                4 5 6  S2（12删指纹）
+                7 8 9  S3（13系统密码）
+               OK 0 CL S4（14return）
 ************************************/
 int GetKeyVal(void) 
 {

@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "board.h"
 #include "rtthread.h"
-#include "delay.h"
 #include "newweb.h"
 
 rt_mailbox_t G4_mail = RT_NULL;
@@ -104,7 +103,7 @@ void G4_RST(void)
 {
 	uint16_t temp;
 	GPIO_ResetBits(G4_RST_PORT, G4_RST_PIN);
-	for(temp=0;temp<1000;temp++);
+	for(temp=0;temp<50000;temp++);
 	GPIO_SetBits(G4_RST_PORT, G4_RST_PIN);
 
 }
@@ -254,11 +253,11 @@ bool G4_Cmd ( char * cmd, char * reply1, char * reply2, u32 waittime )
 		return true;
 	}
 	
-	//Delay_ms ( waittime );                 //延时
+	//rt_thread_delay ( waittime );                 //延时
 	
 	do
 	{
-		delay_ms(100);						 //延时
+		rt_thread_delay(100);						 //延时
 		delayTime=delayTime+100;
 	}while((delayTime<waittime)&&(G4_Fram_Record.FramFinishFlag==0));
 	
@@ -291,9 +290,9 @@ bool G4_EnterATMode(void)
 {
 	bool result=false;
 	G4_Cmd ( "+++", NULL, NULL, 0 );
-	delay_ms(50);
+	rt_thread_delay(50);
 	G4_Cmd ( "\r\n", NULL, NULL, 0 );
-	delay_ms(500);
+	rt_thread_delay(500);
 	result=G4_Cmd ( "AT+VER\r\n", "+OK=", NULL, 5000 );
   rt_kprintf("result=%d\n\n",result);
 	return result;
@@ -483,70 +482,69 @@ bool G4_AT_UARTCLR(uint8_t flag)
 }
 
 
+//void G4_USART_IRQHandler()
+//{
+//	uint8_t chTemp;
+//	static uint8_t FirstGet=0;
+//	if ( USART_GetITStatus ( G4_USARTx, USART_IT_RXNE ) != RESET )
+//	{
+//		
+//		chTemp=USART_ReceiveData( G4_USARTx ); 
+//		
+//		rt_kprintf("%c",chTemp);
+//		
+//		if(G4_Fram_Record.FramLength<( RX_BUF_MAX_LEN - 1 ))
+//		{
+//			G4_Fram_Record.Data_RX_BUF[G4_Fram_Record.FramLength]=chTemp;
+//			G4_Fram_Record.FramLength++;
+//		}
+//		
+//		if(unVanish==1)
+//		{
+//			if(FirstGet==0)
+//			{
+//				G4_GET[G4_GET_POINT].num=1;
+//				G4_GET[G4_GET_POINT].data[0]=chTemp;
+//				FirstGet=1;
+//				rt_mb_send(G4_mail,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
+//			}else
+//			{
+//				if(G4_GET[G4_GET_POINT].num<1499)
+//				{
+//					G4_GET[G4_GET_POINT].data[G4_GET[G4_GET_POINT].num]=chTemp;
+//					G4_GET[G4_GET_POINT].num++;
+//				}
+//				rt_mb_send(G4_mail,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
+//			}
+//		}
+//	}else if ( USART_GetITStatus( G4_USARTx, USART_IT_IDLE ) == SET )
+//	{
+//		chTemp=USART_ReceiveData( G4_USARTx ); 
+//		
+//		rt_kprintf("%c",chTemp);
+//		
+//		if(G4_Fram_Record.FramLength<( RX_BUF_MAX_LEN - 1 ))
+//		{
+//			G4_Fram_Record.Data_RX_BUF[G4_Fram_Record.FramLength]=chTemp;
+//			G4_Fram_Record.FramLength++;
+//		}
+//		
+//		if(unVanish==1)
+//		{
+//			if(G4_GET[G4_GET_POINT].num<1499)
+//			{
+//				G4_GET[G4_GET_POINT].data[G4_GET[G4_GET_POINT].num]=chTemp;
+//				G4_GET[G4_GET_POINT].num++;
+//			}
+//			G4_GET[G4_GET_POINT].data[G4_GET[G4_GET_POINT].num]='\0';
+//			rt_mb_send(G4_mail,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
+//			G4_GET_POINT=(G4_GET_POINT+1)%3;
+//		}
+//		FirstGet=0;
+//	}
+//}
+
 void G4_USART_IRQHandler()
-{
-	uint8_t chTemp;
-	static uint8_t FirstGet=0;
-	if ( USART_GetITStatus ( G4_USARTx, USART_IT_RXNE ) != RESET )
-	{
-		
-		chTemp=USART_ReceiveData( G4_USARTx ); 
-		
-		rt_kprintf("%c",chTemp);
-		
-		if(G4_Fram_Record.FramLength<( RX_BUF_MAX_LEN - 1 ))
-		{
-			G4_Fram_Record.Data_RX_BUF[G4_Fram_Record.FramLength]=chTemp;
-			G4_Fram_Record.FramLength++;
-		}
-		
-		if(unVanish==1)
-		{
-			if(FirstGet==0)
-			{
-				G4_GET[G4_GET_POINT].num=1;
-				G4_GET[G4_GET_POINT].data[0]=chTemp;
-				FirstGet=1;
-				rt_mb_send(G4_mail,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
-			}else
-			{
-				if(G4_GET[G4_GET_POINT].num<1499)
-				{
-					G4_GET[G4_GET_POINT].data[G4_GET[G4_GET_POINT].num]=chTemp;
-					G4_GET[G4_GET_POINT].num++;
-				}
-				rt_mb_send(G4_mail,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
-			}
-		}
-	}else if ( USART_GetITStatus( G4_USARTx, USART_IT_IDLE ) == SET )
-	{
-		chTemp=USART_ReceiveData( G4_USARTx ); 
-		
-		rt_kprintf("%c",chTemp);
-		
-		if(G4_Fram_Record.FramLength<( RX_BUF_MAX_LEN - 1 ))
-		{
-			G4_Fram_Record.Data_RX_BUF[G4_Fram_Record.FramLength]=chTemp;
-			G4_Fram_Record.FramLength++;
-		}
-		
-		if(unVanish==1)
-		{
-			if(G4_GET[G4_GET_POINT].num<1499)
-			{
-				G4_GET[G4_GET_POINT].data[G4_GET[G4_GET_POINT].num]=chTemp;
-				G4_GET[G4_GET_POINT].num++;
-			}
-			G4_GET[G4_GET_POINT].data[G4_GET[G4_GET_POINT].num]='\0';
-			rt_mb_send(G4_mail,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
-			G4_GET_POINT=(G4_GET_POINT+1)%3;
-		}
-		FirstGet=0;
-	}
-}
-
-
-void xs()
 {
 	uint8_t chTemp;
 	static int16_t getnum=0;
@@ -563,16 +561,18 @@ void xs()
 			G4_GET[G4_GET_POINT].data[getnum] = chTemp;
 			getnum++;
 		}
-	}else if ( USART_GetITStatus( G4_USARTx, USART_IT_IDLE ) == SET )
+	}else if ( USART_GetITStatus( G4_USARTx, USART_IT_IDLE ) == SET )  //空闲中断，用于判断是否接收完一帧数据
 	{
 		chTemp=USART_ReceiveData( G4_USARTx ); 
-		if(getnum < 1499)
-		{
-			G4_GET[G4_GET_POINT].data[getnum] = chTemp;
-			getnum++;
-		}
+//		if(getnum < 1499)
+//		{
+//			G4_GET[G4_GET_POINT].data[getnum] = chTemp;
+//			getnum++;
+//		}
 		G4_GET[G4_GET_POINT].num = getnum;
 		getnum = 0;
+//		rt_kprintf ( "1111111111111\n\n"); 
 		rt_mb_send(webmsg_recemb,(rt_uint32_t)&G4_GET[G4_GET_POINT]);
+		
 	}
 }

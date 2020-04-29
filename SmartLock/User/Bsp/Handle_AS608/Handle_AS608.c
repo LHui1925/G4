@@ -4,13 +4,14 @@
 #include "bsp_usart.h"
 #include "beep.h"
 #include "sys.h"
-#include "delay.h"  
 #include "usart2.h"
 #include "AS608.h"
 #include "timer.h"
 #include "Handle_as608.h"
 #include "stdio.h"
 #include "string.h"
+#include "newweb.h"
+
 
 SysPara AS608Para;//指纹模块AS608参数
 u16 ValidN;//模块内有效指纹个数
@@ -29,16 +30,16 @@ u16 GET_NUM(void)
 		if(key_num!=100)
 		{
 			if(key_num==13)return 0xFFFF; //‘返回’键
-			if(key_num==14)return 0xFF00;  //	
-//      if(key_num>0&&key_num<=9&&num<99)			
+			if(key_num==14)return 0xFF00;  //		
 			if(key_num>0&&key_num<=9&&num<9999)//‘1-9’键(限制输入3位数)
 				num =num*10+key_num;		
-			if(key_num==21)num =num/10;//‘Del’键		
-//      if(key_num==0&&num<99)num =num*10;			
+			if(key_num==21)num =num/10;//‘Del’键			
 			if(key_num==0&&num<9999)num =num*10;//‘0’键
 			if(key_num==20)return num;  //‘Enter’键
+			
 			rt_kprintf("num=%d\n\n",num);
 		}
+		
 	}	
 }
 
@@ -63,6 +64,7 @@ u16 GET_str(unsigned char *str_num)
 			}		
 			if(key_num==21)str_num[--count]='\0';//‘Del’键					
 			if(key_num==20)return 0xF000;  //‘Enter’键
+			
 			rt_kprintf("str_num=%s\n\n",str_num);
 		}
 	}	
@@ -81,7 +83,6 @@ void del_str(unsigned char *str_num)
 	for(count=0;count<length;count++)
 		str_num[count] = '\0';
 }
-
 
 
 //录指纹
@@ -148,7 +149,7 @@ void Add_FR(void)
 					i=0;
 					processnum=0;//跳回第一步		
 				}
-				delay_ms(1200);
+				rt_thread_delay(30);
 				break;
 
 			case 3:
@@ -164,7 +165,7 @@ void Add_FR(void)
 					processnum=0;
 				rt_kprintf("生成指纹模板错误\n\n");
 				}
-				delay_ms(1200);
+				rt_thread_delay(30);
 				break;
 				
 			case 4:	
@@ -172,7 +173,9 @@ void Add_FR(void)
 				rt_kprintf("0=< ID <=299\n\n");
 			
 				do
+				{
 					ID=GET_NUM();
+				}
 				while(!(ID<AS608Para.PS_max));//输入ID必须小于指纹容量的最大值
 				ensure=PS_StoreChar(CharBuffer2,ID);//储存模板
 				if(ensure==0x00) 
@@ -180,17 +183,13 @@ void Add_FR(void)
 					rt_kprintf("录入指纹成功\n\n");		
 					PS_ValidTempleteNum(&ValidN);//读库指纹个数
 					rt_kprintf("AS608Para.PS_max-ValidN=%d\n\n",AS608Para.PS_max-ValidN);
-					delay_ms(1500);
+					rt_thread_delay(30);
 					return ;
 				}else {processnum=0;rt_kprintf("录入指纹失败\n\n");}					
 				break;				
 		}
-		delay_ms(1000);
-		if(i==5)//超过5次没有按手指则退出
-		{
-			rt_kprintf("超过5次没有按手指，退出！！！\n\n");
-			break;	
-		}	
+		rt_thread_delay(500);
+
 		if(count==10)//超过5次没有按手指则退出
 		{
 			rt_kprintf("超过5次没有按手指，退出！！！\n\n");
@@ -205,6 +204,10 @@ void press_FR(void)
 	SearchResult seach;
 	u8 ensure;
 	char *str;
+	cJSON *FR;
+	char *fr_out;
+	uint8_t fr_len;
+
 	ensure=PS_GetImage();
 	if(ensure==0x00)//获取图像成功 
 	{	
@@ -218,17 +221,44 @@ void press_FR(void)
 			{				
 				rt_kprintf("刷指纹成功\n\n");				
 				str=rt_malloc(50);
-				sprintf(str,"确有此人,ID:%d  匹配得分:%d\n\n",seach.pageID,seach.mathscore);
+				
+				LED2_ON;
+				sprintf(str,"确有此人,ID:%d  匹配得分:%d 开锁成功\n\n",seach.pageID,seach.mathscore);
+				
+				FR=cJSON_CreateObject();
+				cJSON_AddStringToObject(FR,"type","unlock");
+				cJSON_AddStringToObject(FR,"result","success");
+				fr_out=cJSON_PrintUnformatted(FR);
+				rt_kprintf("\nfr_out=%s\n\n",fr_out);
+				fr_len=rt_strlen(fr_out);
+				//out[len++]='\0';
+				fr_len++;
+				rt_mq_send(webmsg_sendmq,fr_out,fr_len);
+				rt_free(fr_out);
+				cJSON_Delete(FR);
+				
+				rt_thread_delay(1000);
+				LED2_OFF;
+				
 				rt_kprintf("str=%s\n\n",str);	
-//				rt_free(str);
+				rt_free(str);
 			}
-			else 
-				rt_kprintf("搜索失败！\n\n");					
+			else
+				{	
+					BEEP=1;//打开蜂鸣器
+					LED1_ON;
+					rt_thread_delay(100);
+					BEEP=0;//关闭蜂鸣器
+					rt_thread_delay(1000);
+					LED1_OFF;
+					rt_kprintf("搜索失败！解锁失败！\n\n");
+				}
+									
 	  }
 		else
      rt_kprintf("生成特征失败\n\n");
 	 BEEP=0;//关闭蜂鸣器
-	 delay_ms(600);
+	 rt_thread_delay(600);
 
 	}
 }
@@ -259,6 +289,14 @@ void verify_FR(void)
 				rt_kprintf("刷指纹成功\n\n");				
 				str=rt_malloc(50);
 				sprintf(str,"已有指纹,ID:%d  匹配得分:%d\n\n请换个指纹!!!\n\n",seach.pageID,seach.mathscore);
+				
+				BEEP=1;//打开蜂鸣器
+				LED3_ON;
+				rt_thread_delay(50);
+				BEEP=0;//关闭蜂鸣器
+				rt_thread_delay(200);
+				LED3_OFF;
+				
 				rt_kprintf("str=%s\n\n",str);	
 				rt_free(str);
 				verify_sign=1;
@@ -281,7 +319,7 @@ void verify_FR(void)
 			break;	
 		}
 	 BEEP=0;//关闭蜂鸣器
-	 delay_ms(600);
+	 rt_thread_delay(500);
 	}
 	}
 	 
@@ -292,7 +330,7 @@ void verify_FR(void)
 			rt_kprintf("超过10次没有按手指，退出！！！\n\n");
 			break;	
 		}	
-	delay_ms(600);
+	rt_thread_delay(2000);
  }
 }
 
@@ -300,57 +338,53 @@ void verify_FR(void)
 void Del_FR(void)
 {
 	u8  ensure;
-	u16 num;
+	u16 ID;
 	rt_kprintf("删除指纹\n\n");
 	rt_kprintf("请输入指纹ID按Enter发送\n\n");
 	rt_kprintf("0=< ID <=299\n\n");
-	delay_ms(50);
-//	AS608_load_keyboard(0,170,(u8**)kbd_delFR);
-	num=GET_NUM();//获取返回的数值
-//	if(num==0xFFFF)
-//	{
-//		rt_kprintf("返回主界面\n\n");
-//		goto MENU ; //返回主页面
-//	}
-		if(num==0xFFFF)
+	rt_thread_delay(12);
+
+	ID=GET_NUM();//获取返回的数值
+
+		if(ID==0xFFFF)
 	{
 		rt_kprintf("返回主界面\n\n");
-		
 	}
-//		goto MENU ; //返回主页面
-	if(num==0xFF00)
+	
+	if(ID==0xFF00)
 		ensure=PS_Empty();//清空指纹库
 	else 
-		ensure=PS_DeletChar(num,1);//删除单个指纹
+		ensure=PS_DeletChar(ID,1);//删除单个指纹
+	
 	if(ensure==0)
 	{
 		rt_kprintf("删除指纹成功!!!\n\n");
-		
+	
 	}
   else
 		rt_kprintf("删除指纹不成功!!!\n\n");
-	delay_ms(1200);
+	
+	rt_thread_delay(300);
 	PS_ValidTempleteNum(&ValidN);//读库指纹个数
 	rt_kprintf("AS608Para.PS_max-ValidN=%d\n\n",AS608Para.PS_max-ValidN);
-	
-//MENU:	
-  	delay_ms(50);
+
+	rt_thread_delay(50);
 }
 
+
+//指纹模块通信
 void Handle_AS608(void)
 {
 	  u8 ensure;
 	  char *str;	
-	/*加载指纹识别实验界面*/
 
-  rt_kprintf("AS608指纹识别模块测试程序\n\n");
   rt_kprintf("与AS608模块握手....\n\n");	
 	
 	while(PS_HandShake(&AS608Addr))//与AS608模块握手
 	{
-		delay_ms(400);
+		rt_thread_delay(100);
 		rt_kprintf("未检测到模块！！！\n\n");
-		delay_ms(800);
+		rt_thread_delay(200);
 		rt_kprintf("尝试连接模块...\n\n");	  
 	}
 
@@ -369,9 +403,8 @@ void Handle_AS608(void)
 		rt_kprintf("%s\n\n",str);
 	}
 	else
-		rt_kprintf("ERROR\n\n");//ShowErrMessage(ensure);	
+		rt_kprintf("ERROR\n\n");	
 	rt_free(str);
-//	AS608_load_keyboard(0,170,(u8**)kbd_menu);//加载虚拟键盘
-	
+
 
 }
