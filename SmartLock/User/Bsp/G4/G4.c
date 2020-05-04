@@ -76,7 +76,7 @@ void G4_StatePinConfig(void)
 	GPIO_InitStructure.GPIO_Pin = G4_LIKA_PIN;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(G4_LIKA_PORT, &GPIO_InitStructure);
-//	GPIO_EXTILineConfig(GPIO_PortSourceGPIOB,GPIO_PinSource1);//初始化IO口与中断线的映射关系
+	GPIO_EXTILineConfig(G4_LIKA_EXIT_PORTSOURCE,G4_LIKA_EXIT_PINSOURCE);//初始化IO口与中断线的映射关系
 
 	// 将STAT的GPIO配置为浮空输入模式
 	GPIO_InitStructure.GPIO_Pin = G4_STAT_PIN;
@@ -84,14 +84,14 @@ void G4_StatePinConfig(void)
 	GPIO_Init(G4_STAT_PORT, &GPIO_InitStructure);
 	
 	//初始化外部中断(exti.c)
-	EXTI_InitStruct.EXTI_Line =EXTI_Line1;//信号源
+	EXTI_InitStruct.EXTI_Line =G4_LIKA_EXTI_LINE;//信号源
 	EXTI_InitStruct.EXTI_LineCmd =ENABLE;
 	EXTI_InitStruct.EXTI_Mode =EXTI_Mode_Interrupt;//中断模式
 	EXTI_InitStruct.EXTI_Trigger =EXTI_Trigger_Falling;//下降沿触发
 	EXTI_Init(&EXTI_InitStruct);//调用EXTI_Init库函数
 	
 	//NVIC初始化设置(misc.c)--定义优先级
-	NVIC_InitStruct.NVIC_IRQChannel =EXTI1_IRQn;//中断源，在stm32f10x.h的IRQn_Type中
+	NVIC_InitStruct.NVIC_IRQChannel =G4_LIKA_EXTI_IRQ;//中断源，在stm32f10x.h的IRQn_Type中
 	NVIC_InitStruct.NVIC_IRQChannelCmd =ENABLE;
 	NVIC_InitStruct.NVIC_IRQChannelPreemptionPriority =2;//配置抢占优先级：2
 	NVIC_InitStruct.NVIC_IRQChannelSubPriority =2;//配置子优先级：2
@@ -99,26 +99,6 @@ void G4_StatePinConfig(void)
 
 }
 
-
-//void EXTI1_IRQHandler()//中断服务函数stm3210x.h   startuo_stm32f10x_hd.s中找到
-//{
-//	if(EXTI_GetITStatus(EXTI_Line1)==1)
-//	{
-//			
-//			if(conn_flag==1)
-//			{
-//				check=1;
-//				rt_kprintf("111111111111\r\n");
-//			}
-//			else
-//			{
-//				check=0;
-//				rt_kprintf("22222222222\r\n");
-//			}
-//		
-//		EXTI_ClearITPendingBit(EXTI_Line1);//清除中断标志位
-//	}
-//}
 
 /*检查网络状态*/
 bool G4_CheckSTAT(void)

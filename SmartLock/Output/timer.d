@@ -3,7 +3,7 @@
 ..\..\output\timer.o: ..\..\User\Bsp\HARDWARE\sys\sys.h
 ..\..\output\timer.o: ..\..\Libraries\CMSIS\stm32f10x.h
 ..\..\output\timer.o: ..\..\Libraries\CMSIS\core_cm3.h
-..\..\output\timer.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\timer.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\..\output\timer.o: ..\..\Libraries\CMSIS\system_stm32f10x.h
 ..\..\output\timer.o: ..\..\User\stm32f10x_conf.h
 ..\..\output\timer.o: ..\..\Libraries\FWlib\inc\stm32f10x_adc.h

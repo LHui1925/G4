@@ -34,6 +34,12 @@
 #define  G4_STAT_PORT       GPIOB 
 #define  G4_STAT_PIN        GPIO_Pin_9
 
+#define	 G4_LIKA_EXIT_PORTSOURCE		GPIO_PortSourceGPIOB
+#define  G4_LIKA_EXIT_PINSOURCE     GPIO_PinSource1
+#define	 G4_LIKA_EXTI_LINE					EXTI_Line1
+#define  G4_LIKA_EXTI_IRQ          	EXTI1_IRQn
+#define  G4_LIKA_IRQHandler         EXTI1_IRQHandler
+
 
 
 

@@ -70,10 +70,9 @@ void newwebconnect_entry(void *parameter)
 	uint8_t heart[3] = {0x01,0x80,0x7e};
 	rt_err_t err;
 	
-CHECK:
 	while(1)
 	{
-		rt_kprintf("2222\n\n");
+		rt_kprintf("\n开始连接服务器\n");
 		G4_RST();
 		rt_thread_delay(2000);
 		//连接服务端部分
@@ -115,21 +114,28 @@ CHECK:
 		rt_kprintf("\r\n服务器验证验成功！\r\n");
 		//等待其他线程，发来的需要发送到服务端的数据
 		while(1)
-		{
-			
-			rt_thread_delay(1);
-      frequency++;
-				
+		{			
 			err = rt_mq_recv(webmsg_sendmq,cache,1024,5000);
-			if(G4_CheckLIKA()==false)
+			if(conn_flag==0)
 			{
-				conn_flag=0;
+				rt_kprintf("\n网络连接断开\n");
 				break;
 			}
 			if(err == RT_EOK)
 			{
 				rt_kprintf("\r\ncache=%s\r\n",cache);
 				caclen = rt_strlen(cache);//计算待发送的数据长度，因为发送的数据为JSON格式，是字符串，所以可以用strlen计算长度
+				if(caclen == 0)
+				{
+					if(conn_flag==0)
+					{
+						rt_kprintf("\n网络连接断开\n");
+						break;
+					}else
+					{
+						continue;
+					}
+				}
 				assembleWebMsg(cache,caclen,cache2,&caclen);//组装发送的数据
 //				rt_kprintf("\r\ncache2=%s\r\n",cache2);
 //				rt_kprintf("\r\ncaclen=%d\r\n",caclen);
@@ -139,13 +145,6 @@ CHECK:
 			{
 				G4_SendArray(heart,3);  //发送心跳包
 //				rt_kprintf("\r\nheart\r\n");
-			}
-			
-			if(frequency==10)
-			{
-				frequency=0;
-        rt_kprintf("1111\n\n");
-				goto CHECK;
 			}
 			
 		}
