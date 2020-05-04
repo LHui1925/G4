@@ -11,6 +11,8 @@ extern FIL fp;// 文件系统句柄
 extern UINT br;//多少字节被正常读出
 extern UINT bw;//多少字节被正常写入
 extern char rData[4096];
+extern uint8_t check;
+int frequency;
 
 //认证信息，这个认证信息只能用于dev00001
 uint8_t token[]={
@@ -67,8 +69,11 @@ void newwebconnect_entry(void *parameter)
 	
 	uint8_t heart[3] = {0x01,0x80,0x7e};
 	rt_err_t err;
+	
+CHECK:
 	while(1)
 	{
+		rt_kprintf("2222\n\n");
 		G4_RST();
 		rt_thread_delay(2000);
 		//连接服务端部分
@@ -92,6 +97,7 @@ void newwebconnect_entry(void *parameter)
 		rt_kprintf("\r\n等待服务器验证\r\n");
 		while(i<50)
 		{
+			
 			rt_thread_delay(100);
 			if(conn_flag == 1)
 			{
@@ -103,13 +109,17 @@ void newwebconnect_entry(void *parameter)
 		//如果i到50，说明没有认证成功，重新认证
 		if(i >= 50)
 		{
-			rt_kprintf("\r\n服务器验证验失败！r\n");
+			rt_kprintf("\r\n服务器验证验失败！\r\n");
 			continue;
 		}
 		rt_kprintf("\r\n服务器验证验成功！\r\n");
 		//等待其他线程，发来的需要发送到服务端的数据
 		while(1)
 		{
+			
+			rt_thread_delay(1);
+      frequency++;
+				
 			err = rt_mq_recv(webmsg_sendmq,cache,1024,5000);
 			if(G4_CheckLIKA()==false)
 			{
@@ -130,6 +140,14 @@ void newwebconnect_entry(void *parameter)
 				G4_SendArray(heart,3);  //发送心跳包
 //				rt_kprintf("\r\nheart\r\n");
 			}
+			
+			if(frequency==10)
+			{
+				frequency=0;
+        rt_kprintf("1111\n\n");
+				goto CHECK;
+			}
+			
 		}
 	}
 }
@@ -244,12 +262,23 @@ void newwebhandle_entry(void *parameter)
 									f_lseek(&fp,0);//配置光标到开头
 									res = f_read (&fp,rData,f_size(&fp),&br);
 									if(res == FR_OK)
-										rt_kprintf ("\r\n文件内容：%s br= %d",rData,br);	
+										rt_kprintf ("\r\n文件内容：%s br= %d\r\n",rData,br);	
 								}	
 						}	
 						f_close(&fp);//操作完成，一定要关闭文件
-						//向服务器反馈
 						
+						
+						//向服务器反馈
+						jsend=cJSON_CreateObject();
+						cJSON_AddStringToObject(jsend,"type","setTemporaryCode");
+						cJSON_AddStringToObject(jsend,"result","success");
+						out=cJSON_PrintUnformatted(jsend);
+						rt_kprintf("\nout=%s\n\n",out);
+						len=rt_strlen(out);
+						len++;
+						rt_mq_send(webmsg_sendmq,out,len);
+						rt_free(out);
+						cJSON_Delete(jsend);
 					}
 					
 					

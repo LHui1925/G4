@@ -225,17 +225,17 @@ void press_FR(void)
 				LED2_ON;
 				sprintf(str,"确有此人,ID:%d  匹配得分:%d 开锁成功\n\n",seach.pageID,seach.mathscore);
 				
-				FR=cJSON_CreateObject();
-				cJSON_AddStringToObject(FR,"type","unlock");
-				cJSON_AddStringToObject(FR,"result","success");
-				fr_out=cJSON_PrintUnformatted(FR);
-				rt_kprintf("\nfr_out=%s\n\n",fr_out);
-				fr_len=rt_strlen(fr_out);
-				//out[len++]='\0';
-				fr_len++;
-				rt_mq_send(webmsg_sendmq,fr_out,fr_len);
-				rt_free(fr_out);
-				cJSON_Delete(FR);
+//				FR=cJSON_CreateObject();
+//				cJSON_AddStringToObject(FR,"type","unlock");
+//				cJSON_AddStringToObject(FR,"result","success");
+//				fr_out=cJSON_PrintUnformatted(FR);
+//				rt_kprintf("\nfr_out=%s\n\n",fr_out);
+//				fr_len=rt_strlen(fr_out);
+//				//out[len++]='\0';
+//				fr_len++;
+//				rt_mq_send(webmsg_sendmq,fr_out,fr_len);
+//				rt_free(fr_out);
+//				cJSON_Delete(FR);
 				
 				rt_thread_delay(1000);
 				LED2_OFF;

@@ -27,7 +27,18 @@ Project File Date:  04/14/2020
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'F:\MDK-ARM525\ARM\ARMCC\Bin'
 Build target 'Fire_RT-Thread'
-"..\..\Output\Fire_RT-Thread.axf" - 0 Error(s), 0 Warning(s).
+compiling newweb.c...
+..\..\User\Bsp\web\newweb.c(362): warning:  #550-D: variable "user_number"  was set but never used
+  						  char *user_number;
+..\..\User\Bsp\web\newweb.c(363): warning:  #550-D: variable "user_name"  was set but never used
+  							char *user_name;
+..\..\User\Bsp\web\newweb.c(165): warning:  #177-D: variable "cache2"  was declared but never referenced
+  	char cache2[1024];
+..\..\User\Bsp\web\newweb.c: 3 warnings, 0 errors
+linking...
+Program Size: Code=57724 RO-data=178396 RW-data=5080 ZI-data=57888  
+FromELF: creating hex file...
+"..\..\Output\Fire_RT-Thread.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -41,7 +52,7 @@ Package Vendor: Keil
   F:\MDK-ARM525\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>

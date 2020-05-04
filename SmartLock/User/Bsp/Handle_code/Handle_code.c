@@ -262,19 +262,19 @@ void handle_sys(void)
 							del_str(openinig_password);
 							LED2_ON;
 							rt_kprintf("开锁成功\n\n");
-							
-							//向服务器反馈
-							KB=cJSON_CreateObject();
-							cJSON_AddStringToObject(KB,"type","unlock");
-							cJSON_AddStringToObject(KB,"result","success");
-							kb_out=cJSON_PrintUnformatted(KB);
-							rt_kprintf("\nfr_out=%s\n\n",kb_out);
-							kb_len=rt_strlen(kb_out);
-		
-							kb_len++;
-							rt_mq_send(webmsg_sendmq,kb_out,kb_len);
-							rt_free(kb_out);
-							cJSON_Delete(KB);
+//							
+//							//向服务器反馈
+//							KB=cJSON_CreateObject();
+//							cJSON_AddStringToObject(KB,"type","unlock");
+//							cJSON_AddStringToObject(KB,"result","success");
+//							kb_out=cJSON_PrintUnformatted(KB);
+//							rt_kprintf("\nfr_out=%s\n\n",kb_out);
+//							kb_len=rt_strlen(kb_out);
+//		
+//							kb_len++;
+//							rt_mq_send(webmsg_sendmq,kb_out,kb_len);
+//							rt_free(kb_out);
+//							cJSON_Delete(KB);
 							
 							rt_thread_delay(1000);
 							LED2_OFF;

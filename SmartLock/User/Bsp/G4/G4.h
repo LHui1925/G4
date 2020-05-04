@@ -26,10 +26,10 @@
 
 //¼ì²âÒý½Å
 #define  G4_RST_PORT       GPIOB  
-#define  G4_RST_PIN        GPIO_Pin_1
+#define  G4_RST_PIN        GPIO_Pin_8
 
 #define  G4_LIKA_PORT       GPIOB 
-#define  G4_LIKA_PIN        GPIO_Pin_8
+#define  G4_LIKA_PIN        GPIO_Pin_1
 
 #define  G4_STAT_PORT       GPIOB 
 #define  G4_STAT_PIN        GPIO_Pin_9
@@ -73,5 +73,6 @@ bool G4_AT_UARTCLR(uint8_t flag);
 bool G4_CheckSTAT(void);
 bool G4_CheckLIKA(void);
 void G4_RST(void);
+
 #endif
 
