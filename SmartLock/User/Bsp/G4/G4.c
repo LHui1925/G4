@@ -15,14 +15,6 @@ uint8_t G4_GET_POINT=0;//指向当前存放的区域
 
 struct  G4_USARTx_Fram  G4_Fram_Record = { 0 };
 
-extern uint8_t unVanish;
-extern uint8_t token[];
-extern uint8_t conn_flag;
-extern uint8_t i;
-
-uint8_t check=0;
-
-
 uint32_t StringToInt(char *str)
 {
 	uint32_t temp=0;
@@ -85,7 +77,7 @@ void G4_StatePinConfig(void)
 	
 	//初始化外部中断(exti.c)
 	EXTI_InitStruct.EXTI_Line =G4_LIKA_EXTI_LINE;//信号源
-	EXTI_InitStruct.EXTI_LineCmd =ENABLE;
+	EXTI_InitStruct.EXTI_LineCmd =DISABLE;
 	EXTI_InitStruct.EXTI_Mode =EXTI_Mode_Interrupt;//中断模式
 	EXTI_InitStruct.EXTI_Trigger =EXTI_Trigger_Falling;//下降沿触发
 	EXTI_Init(&EXTI_InitStruct);//调用EXTI_Init库函数
@@ -99,6 +91,22 @@ void G4_StatePinConfig(void)
 
 }
 
+/*设置LIKA引脚的中断开关，0关闭，1打开*/
+void G4_SetLIKAPin(uint8_t mode)
+{
+	EXTI_InitTypeDef EXTI_InitStruct;
+	if(mode == 1)
+	{
+		EXTI_InitStruct.EXTI_LineCmd =ENABLE;
+	}else
+	{
+		EXTI_InitStruct.EXTI_LineCmd =DISABLE;
+	}
+	EXTI_InitStruct.EXTI_Line =G4_LIKA_EXTI_LINE;//信号源
+	EXTI_InitStruct.EXTI_Mode =EXTI_Mode_Interrupt;//中断模式
+	EXTI_InitStruct.EXTI_Trigger =EXTI_Trigger_Falling;//下降沿触发
+	EXTI_Init(&EXTI_InitStruct);
+}
 
 /*检查网络状态*/
 bool G4_CheckSTAT(void)

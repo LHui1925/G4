@@ -11,7 +11,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "newweb.h"
-
+#include "relay.h"
 
 SysPara AS608Para;//指纹模块AS608参数
 u16 ValidN;//模块内有效指纹个数
@@ -222,6 +222,7 @@ void press_FR(void)
 				rt_kprintf("刷指纹成功\n\n");				
 				str=rt_malloc(50);
 				
+				RELAY_ON(RELAY0);
 				LED2_ON;
 				sprintf(str,"确有此人,ID:%d  匹配得分:%d 开锁成功\n\n",seach.pageID,seach.mathscore);
 				
@@ -238,6 +239,7 @@ void press_FR(void)
 //				cJSON_Delete(FR);
 				
 				rt_thread_delay(1000);
+			  RELAY_OFF(RELAY0);
 				LED2_OFF;
 				
 				rt_kprintf("str=%s\n\n",str);	

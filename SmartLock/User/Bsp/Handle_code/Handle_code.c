@@ -10,6 +10,7 @@
 #include "Handle_flash.h"
 #include "newweb.h"
 #include "beep.h"
+#include "relay.h"
 
 #define MAX 100
 extern u16 num;
@@ -260,24 +261,15 @@ void handle_sys(void)
 						if((strcmp((const char *)openinig_password,(const char *)sys_password)==0)||(strcmp((const char *)openinig_password,(const char *)TPC_code)==0&&tpc_code_t=='1'))
 						{
 							del_str(openinig_password);
+							
+							RELAY_ON(RELAY0);
 							LED2_ON;
 							rt_kprintf("开锁成功\n\n");
-//							
-//							//向服务器反馈
-//							KB=cJSON_CreateObject();
-//							cJSON_AddStringToObject(KB,"type","unlock");
-//							cJSON_AddStringToObject(KB,"result","success");
-//							kb_out=cJSON_PrintUnformatted(KB);
-//							rt_kprintf("\nfr_out=%s\n\n",kb_out);
-//							kb_len=rt_strlen(kb_out);
-//		
-//							kb_len++;
-//							rt_mq_send(webmsg_sendmq,kb_out,kb_len);
-//							rt_free(kb_out);
-//							cJSON_Delete(KB);
 							
 							rt_thread_delay(1000);
+						  RELAY_OFF(RELAY0);
 							LED2_OFF;
+							
 							break;
 						}
 					else

@@ -5,6 +5,7 @@
 #include "bsp_spi_flash.h"
 #include "ff.h"	
 #include "string.h"
+#include "relay.h"
 
 extern FRESULT res;
 extern FIL fp;// 文件系统句柄
@@ -74,6 +75,7 @@ void newwebconnect_entry(void *parameter)
 	{
 		rt_kprintf("\n开始连接服务器\n");
 		G4_RST();
+		G4_SetLIKAPin(0);
 		rt_thread_delay(2000);
 		//连接服务端部分
 		while(1)
@@ -113,6 +115,7 @@ void newwebconnect_entry(void *parameter)
 		}
 		rt_kprintf("\r\n服务器验证验成功！\r\n");
 		//等待其他线程，发来的需要发送到服务端的数据
+		G4_SetLIKAPin(1);
 		while(1)
 		{			
 			err = rt_mq_recv(webmsg_sendmq,cache,1024,5000);
@@ -214,8 +217,9 @@ void newwebhandle_entry(void *parameter)
 				/*手机APP解锁*/
 				if(rt_strstr(jitem1->valuestring,"unlock"))
 					{
+						
+						  RELAY_ON(RELAY0);
 						  LED2_ON;
-		
 							rt_kprintf("开锁成功\n\n");					
 							jsend=cJSON_CreateObject();
 							cJSON_AddStringToObject(jsend,"type","unlock");
@@ -229,6 +233,8 @@ void newwebhandle_entry(void *parameter)
 							cJSON_Delete(jsend);
 						
 							rt_thread_delay(1000);
+						
+							RELAY_OFF(RELAY0);
 							LED2_OFF;
 
 					}

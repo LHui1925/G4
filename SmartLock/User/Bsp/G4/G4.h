@@ -79,6 +79,7 @@ bool G4_AT_UARTCLR(uint8_t flag);
 bool G4_CheckSTAT(void);
 bool G4_CheckLIKA(void);
 void G4_RST(void);
+void G4_SetLIKAPin(uint8_t mode);
 
 #endif
 

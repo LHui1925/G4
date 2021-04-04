@@ -42,6 +42,7 @@
 "..\..\output\bsp_spi_flash.o"
 "..\..\output\handle_flash.o"
 "..\..\output\open.o"
+"..\..\output\relay.o"
 "..\..\output\clock.o"
 "..\..\output\components.o"
 "..\..\output\device.o"

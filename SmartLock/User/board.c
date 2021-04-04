@@ -12,6 +12,7 @@
 #include "usart2.h"
 #include "G4.h"
 #include "Handle_flash.h"
+#include "relay.h"
 
 /* RT-Thread相关头文件 */
 #include <rthw.h>
@@ -67,6 +68,9 @@ void rt_hw_board_init()
 	/* 初始化4G模块 */
 	G4_USART_Config();
   G4_StatePinConfig();
+	
+	/* 初始化继电器模块 */
+	RELAY_Init();
 	
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
 	

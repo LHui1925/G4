@@ -2,7 +2,7 @@
 ..\..\output\bsp_key.o: ..\..\User\Bsp\key\bsp_key.h
 ..\..\output\bsp_key.o: ..\..\Libraries\CMSIS\stm32f10x.h
 ..\..\output\bsp_key.o: ..\..\Libraries\CMSIS\core_cm3.h
-..\..\output\bsp_key.o: D:\Software\keil\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\..\output\bsp_key.o: F:\MDK-ARM525\ARM\ARMCC\Bin\..\include\stdint.h
 ..\..\output\bsp_key.o: ..\..\Libraries\CMSIS\system_stm32f10x.h
 ..\..\output\bsp_key.o: ..\..\User\stm32f10x_conf.h
 ..\..\output\bsp_key.o: ..\..\Libraries\FWlib\inc\stm32f10x_adc.h
